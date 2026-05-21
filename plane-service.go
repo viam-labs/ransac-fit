@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	Plane            = resource.NewModel("viamlabs", "ransac-fit", "plane")
+	Plane            = resource.NewModel("viam-labs", "ransac-fit", "plane")
 	errUnimplemented = errors.New("unimplemented")
 )
 

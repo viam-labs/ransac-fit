@@ -17,7 +17,7 @@ import (
 )
 
 // Sphere is the viam resource model for the RANSAC sphere fitting service.
-var Sphere = resource.NewModel("viamlabs", "ransac-fit", "sphere")
+var Sphere = resource.NewModel("viam-labs", "ransac-fit", "sphere")
 
 const sphereSampleSize = 4
 

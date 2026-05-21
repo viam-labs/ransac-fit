@@ -17,11 +17,11 @@ import (
 )
 
 // Cylinder is the viam resource model for the RANSAC cylinder fitting service.
-var Cylinder = resource.NewModel("viamlabs", "ransac-fit", "cylinder")
+var Cylinder = resource.NewModel("viam-labs", "ransac-fit", "cylinder")
 
 const (
-	cylinderSampleSize     = 5
-	powerIterationSteps    = 30
+	cylinderSampleSize      = 5
+	powerIterationSteps     = 30
 	maxDistinctDrawAttempts = 50
 )
 

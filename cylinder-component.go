@@ -15,7 +15,7 @@ import (
 // CylinderComponent is the viam resource model for the RANSAC cylinder
 // fitting generic component, registered against the generic component API
 // and exposing the fitted cylinder through Geometries().
-var CylinderComponent = resource.NewModel("viamlabs", "ransac-fit", "cylinder")
+var CylinderComponent = resource.NewModel("viam-labs", "ransac-fit", "cylinder")
 
 func init() {
 	resource.RegisterComponent(componentgeneric.API, CylinderComponent,
@@ -103,9 +103,19 @@ func (c *ransacFitCylinderComponent) DoCommand(ctx context.Context, cmd map[stri
 }
 
 // Geometries pulls a fresh point cloud, runs RANSAC, and returns the fitted
-// cylinder as a Cylinder geometry primitive. The cylinder's local Z axis is
-// aligned with the fitted axis; its height is the inlier extent along the
-// axis; the geometry pose is centered at the midpoint of that axial extent.
+// cylinder rendered as a Capsule geometry primitive.
+//
+// Why a Capsule rather than spatialmath.Cylinder: the SDK's Cylinder type
+// has no protobuf representation yet (its ToProtobuf panics), so returning
+// one over the gRPC API would kill the server response. Capsule (a
+// cylinder with hemispherical end caps) is the closest primitive that
+// serialises cleanly. The radius and axis-alignment match the fit
+// exactly; the only visual difference is that the ends are rounded.
+//
+// The capsule's local Z axis is aligned with the fitted axis; its length
+// is the inlier extent along the axis (clamped to 2*radius if shorter,
+// which Capsule requires); the geometry pose is centered at the midpoint
+// of the inlier axial extent.
 func (c *ransacFitCylinderComponent) Geometries(ctx context.Context, extra map[string]interface{}) ([]spatialmath.Geometry, error) {
 	cloud, err := c.cam.NextPointCloud(ctx, nil)
 	if err != nil {
@@ -138,23 +148,33 @@ func (c *ransacFitCylinderComponent) Geometries(ctx context.Context, extra map[s
 		return nil, fmt.Errorf("degenerate cylinder height from inliers: %.4f", height)
 	}
 
+	// Capsule requires length >= 2 * radius. If the observed cylinder
+	// section is shorter than that, render it slightly elongated rather
+	// than collapsing to a sphere (which is what NewCapsule does when
+	// length == 2*radius exactly).
+	length := height
+	minLength := 2*fit.Radius + 1e-6
+	if length < minLength {
+		length = minLength
+	}
+
 	cylCenter := fit.Center.Add(fit.Axis.Mul((minT + maxT) / 2))
 	pose := spatialmath.NewPose(cylCenter, &spatialmath.OrientationVector{
 		OX: fit.Axis.X, OY: fit.Axis.Y, OZ: fit.Axis.Z,
 	})
-	cyl, err := spatialmath.NewCylinder(pose, fit.Radius, height, c.name.ShortName())
+	geom, err := spatialmath.NewCapsule(pose, fit.Radius, length, c.name.ShortName())
 	if err != nil {
-		return nil, fmt.Errorf("could not construct cylinder geometry: %w", err)
+		return nil, fmt.Errorf("could not construct cylinder (capsule) geometry: %w", err)
 	}
 
 	c.logger.CDebugf(ctx,
-		"cylinder geom: center=(%.2f,%.2f,%.2f) axis=(%.4f,%.4f,%.4f) radius=%.4f height=%.4f inliers=%d/%d",
+		"cylinder geom (capsule): center=(%.2f,%.2f,%.2f) axis=(%.4f,%.4f,%.4f) radius=%.4f height=%.4f length=%.4f inliers=%d/%d",
 		cylCenter.X, cylCenter.Y, cylCenter.Z,
 		fit.Axis.X, fit.Axis.Y, fit.Axis.Z,
-		fit.Radius, height, len(fit.Inliers), fit.Total,
+		fit.Radius, height, length, len(fit.Inliers), fit.Total,
 	)
 
-	return []spatialmath.Geometry{cyl}, nil
+	return []spatialmath.Geometry{geom}, nil
 }
 
 func (c *ransacFitCylinderComponent) Close(context.Context) error {

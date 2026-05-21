@@ -14,7 +14,7 @@ import (
 // SphereComponent is the viam resource model for the RANSAC sphere fitting
 // generic component, registered against the generic component API and
 // exposing the fitted sphere through Geometries().
-var SphereComponent = resource.NewModel("viamlabs", "ransac-fit", "sphere")
+var SphereComponent = resource.NewModel("viam-labs", "ransac-fit", "sphere")
 
 func init() {
 	resource.RegisterComponent(componentgeneric.API, SphereComponent,

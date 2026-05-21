@@ -1,9 +1,9 @@
 {
   "$schema": "https://dl.viam.dev/module.schema.json",
-  "module_id": "viamlabs:ransac-fit",
+  "module_id": "viam-labs:ransac-fit",
   "visibility": "public",
   "url": "",
-  "description": "Modular generic service: plane",
+  "description": "RANSAC plane / sphere / cylinder fitting for 3D point clouds, exposed as both generic services and generic components (the components render the fitted shape through Geometries()).",
   "applications": null,
   "markdown_link": "README.md",
   "entrypoint": "bin/ransac-fit",
@@ -12,11 +12,6 @@
     "build": "make module.tar.gz",
     "setup": "make setup",
     "path": "module.tar.gz",
-    "arch": [
-      "linux/amd64",
-      "linux/arm64",
-      "darwin/arm64",
-      "windows/amd64"
-    ]
+    "arch": ["linux/amd64", "linux/arm64", "darwin/arm64", "windows/amd64"]
   }
 }

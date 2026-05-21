@@ -17,7 +17,7 @@ import (
 // generic component. It is registered against the generic component API
 // (distinct from the generic service of the same name) and exposes the fitted
 // plane through Geometries() as a thin Box.
-var PlaneComponent = resource.NewModel("viamlabs", "ransac-fit", "plane")
+var PlaneComponent = resource.NewModel("viam-labs", "ransac-fit", "plane")
 
 func init() {
 	resource.RegisterComponent(componentgeneric.API, PlaneComponent,
