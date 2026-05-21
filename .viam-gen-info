@@ -1,0 +1,13 @@
+{
+  "module_name": "ransac-fit",
+  "visibility": "public",
+  "namespace": "viamlabs",
+  "language": "go",
+  "resource_type": "service",
+  "resource_subtype": "generic",
+  "model_name": "plane",
+  "initialize_git": false,
+  "generator_version": "0.1.0",
+  "generated_on": "2026-05-21T04:47:29.195464Z",
+  "module_readme_link": "README.md"
+}
