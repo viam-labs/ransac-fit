@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"ransacfit"
 	"go.viam.com/rdk/logging"
 	"go.viam.com/rdk/resource"
 	generic "go.viam.com/rdk/services/generic"
+	"ransacfit"
 )
 
 func main() {
