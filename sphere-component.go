@@ -51,7 +51,7 @@ func newRansacFitSphereComponent(ctx context.Context, deps resource.Dependencies
 
 // NewSphereComponent constructs a ransac-fit sphere generic component.
 func NewSphereComponent(ctx context.Context, deps resource.Dependencies, name resource.Name, conf *SphereConfig, logger logging.Logger) (resource.Resource, error) {
-	cam, err := camera.FromDependencies(deps, conf.Camera)
+	cam, err := camera.FromProvider(deps, conf.Camera)
 	if err != nil {
 		return nil, fmt.Errorf("could not get camera %q from dependencies: %w", conf.Camera, err)
 	}

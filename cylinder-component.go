@@ -52,7 +52,7 @@ func newRansacFitCylinderComponent(ctx context.Context, deps resource.Dependenci
 
 // NewCylinderComponent constructs a ransac-fit cylinder generic component.
 func NewCylinderComponent(ctx context.Context, deps resource.Dependencies, name resource.Name, conf *CylinderConfig, logger logging.Logger) (resource.Resource, error) {
-	cam, err := camera.FromDependencies(deps, conf.Camera)
+	cam, err := camera.FromProvider(deps, conf.Camera)
 	if err != nil {
 		return nil, fmt.Errorf("could not get camera %q from dependencies: %w", conf.Camera, err)
 	}
