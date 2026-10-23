@@ -17,8 +17,7 @@ import (
 )
 
 var (
-	Plane            = resource.NewModel("viam-labs", "ransac-fit", "plane")
-	errUnimplemented = errors.New("unimplemented")
+	Plane = resource.NewModel("viam-labs", "ransac-fit", "plane")
 )
 
 const (
@@ -101,7 +100,7 @@ func newRansacFitPlane(ctx context.Context, deps resource.Dependencies, rawConf 
 }
 
 func NewPlane(ctx context.Context, deps resource.Dependencies, name resource.Name, conf *Config, logger logging.Logger) (resource.Resource, error) {
-	cam, err := camera.FromDependencies(deps, conf.Camera)
+	cam, err := camera.FromProvider(deps, conf.Camera)
 	if err != nil {
 		return nil, fmt.Errorf("could not get camera %q from dependencies: %w", conf.Camera, err)
 	}

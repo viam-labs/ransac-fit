@@ -92,7 +92,7 @@ func newRansacFitCylinder(ctx context.Context, deps resource.Dependencies, rawCo
 
 // NewCylinder constructs a ransac-fit cylinder service.
 func NewCylinder(ctx context.Context, deps resource.Dependencies, name resource.Name, conf *CylinderConfig, logger logging.Logger) (resource.Resource, error) {
-	cam, err := camera.FromDependencies(deps, conf.Camera)
+	cam, err := camera.FromProvider(deps, conf.Camera)
 	if err != nil {
 		return nil, fmt.Errorf("could not get camera %q from dependencies: %w", conf.Camera, err)
 	}
